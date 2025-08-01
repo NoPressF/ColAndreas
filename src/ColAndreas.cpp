@@ -6,9 +6,6 @@
 #include "ColAndreas.h"
 #include "Natives.h"
 
-void* pAMXFunctions = nullptr;
-extern void* pAMXFunctions;
-
 AMX_NATIVE_INFO natives[] =
 {
 	{ "CA_Init", ColAndreasNatives::CA_Init },
@@ -90,7 +87,7 @@ void ColAndreasComponent::onInit(IComponentList* components)
 	if (pawn_)
 	{
 		setAmxLookups(components);
-		pAMXFunctions = (void*)&pawn_->getAmxFunctions();
+		setAmxFunctions(pawn_->getAmxFunctions());
 		pawn_->getEventDispatcher().addEventHandler(this);
 	}
 }
@@ -105,7 +102,7 @@ void ColAndreasComponent::onFree(IComponent* component)
 	if (component == pawn_)
 	{
 		pawn_ = nullptr;
-		pAMXFunctions = nullptr;
+		setAmxFunctions();
 		setAmxLookups();
 
 		core_->printLn("*********************");
