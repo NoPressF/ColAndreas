@@ -1,6 +1,8 @@
 //*********************************************************************************************************//
 // ColAndreas by [uL]Pottus & [uL]Chris42O & [uL]Slice ****************************************************//
 //*********************************************************************************************************//
+#include <Server/Components/Pawn/Impl/pawn_natives.hpp>
+#include <Server/Components/Pawn/Impl/pawn_impl.hpp>
 #include "ColAndreas.h"
 #include "Natives.h"
 
