@@ -1,6 +1,7 @@
 #include "Natives.h"
 #include "DynamicWorld.h"
-#include <renderware.h>
+#include "renderware.h"
+#include "utility.h"
 
 // Maximum number of raycasts
 #define MAX_MULTICAST_SIZE 99
@@ -9,21 +10,21 @@
 // native functions ***************************************************************************************//
 //*********************************************************************************************************//
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_Init(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_Init(AMX *amx, const cell* params)
 {
-	if (colDataLoaded == true)
+	if (ColAndreasComponent::instance_->colDataLoaded == true)
 	{
-		if (colInit == false)
+		if (ColAndreasComponent::instance_->colInit == false)
 		{
-			logprintf("Loading Map.");
-			collisionWorld->colandreasInitMap();
-			colInit = true;
-			logprintf("Loaded Map.                             ");
+			ColAndreasComponent::instance_->core_->printLn("Loading Map.");
+			ColAndreasComponent::instance_->collisionWorld->colandreasInitMap();
+			ColAndreasComponent::instance_->colInit = true;
+			ColAndreasComponent::instance_->core_->printLn("Loaded Map.                             ");
 			return 1;
 		}
 		else
 		{
-			logprintf("Tried to reload Map.");
+			ColAndreasComponent::instance_->core_->printLn("Tried to reload Map.");
 			return 1;
 		}
 	}
@@ -31,7 +32,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_Init(AMX *amx, cell *params)
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLine(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLine(AMX *amx, const cell* params)
 {
 	cell* addr[3];
 
@@ -41,7 +42,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLine(AMX *amx, cell *params)
 	btVector3 Result;
 	int32_t Model = 0;
 
-	if (collisionWorld->performRayTest(Start, End, Result, Model))
+	if (ColAndreasComponent::instance_->collisionWorld->performRayTest(Start, End, Result, Model))
 	{
 		//Get our adderesses for the last 3
 		amx_GetAddr(amx, params[7], &addr[0]);
@@ -58,7 +59,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLine(AMX *amx, cell *params)
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineID(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineID(AMX *amx, const cell* params)
 {
 	cell* addr[3];
 
@@ -68,7 +69,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineID(AMX *amx, cell *params)
 	btVector3 Result;
 	uint16_t Index = 0;
 
-	if (collisionWorld->performRayTestID(Start, End, Result, Index))
+	if (ColAndreasComponent::instance_->collisionWorld->performRayTestID(Start, End, Result, Index))
 	{
 		//Get our adderesses for the last 3
 		amx_GetAddr(amx, params[7], &addr[0]);
@@ -85,7 +86,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineID(AMX *amx, cell *params)
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineExtraID(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineExtraID(AMX *amx, const cell* params)
 {
 	cell* addr[3];
 
@@ -95,7 +96,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineExtraID(AMX *amx, cell *pa
 	btVector3 Result;
 	uint16_t Data = 0;
 
-	if (collisionWorld->performRayTestExtraID(Start, End, Result, params[1], Data))
+	if (ColAndreasComponent::instance_->collisionWorld->performRayTestExtraID(Start, End, Result, params[1], Data))
 	{
 		//Get our adderesses for the last 3
 		amx_GetAddr(amx, params[8], &addr[0]);
@@ -112,7 +113,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineExtraID(AMX *amx, cell *pa
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineEx(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineEx(AMX *amx, const cell* params)
 {
 	cell* addr[10];
 
@@ -124,7 +125,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineEx(AMX *amx, cell *params)
 	btVector3 Result;
 	int32_t Model = 0;
 
-	if (collisionWorld->performRayTestEx(Start, End, Result, Rotation, Position, Model))
+	if (ColAndreasComponent::instance_->collisionWorld->performRayTestEx(Start, End, Result, Rotation, Position, Model))
 	{
 		amx_GetAddr(amx, params[7], &addr[0]);
 		amx_GetAddr(amx, params[8], &addr[1]);
@@ -153,7 +154,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineEx(AMX *amx, cell *params)
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngle(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngle(AMX *amx, const cell* params)
 {
 	cell* addr[6];
 
@@ -167,7 +168,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngle(AMX *amx, cell *para
 	btScalar RZ;
 	int32_t model = 0;
 
-	if (collisionWorld->performRayTestAngle(Start, End, Result, RX, RY, RZ, model))
+	if (ColAndreasComponent::instance_->collisionWorld->performRayTestAngle(Start, End, Result, RX, RY, RZ, model))
 	{
 		//Get our adderesses for the last 6
 		amx_GetAddr(amx, params[7], &addr[0]);
@@ -189,7 +190,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngle(AMX *amx, cell *para
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngleEx(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngleEx(AMX *amx, const cell* params)
 {
 	cell* addr[12];
 
@@ -205,7 +206,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngleEx(AMX *amx, cell *pa
 	btScalar RZ;
 	int32_t Model = 0;
 
-	if (collisionWorld->performRayTestAngleEx(Start, End, Result, RX, RY, RZ, ObjectRotation, ObjectPosition, Model))
+	if (ColAndreasComponent::instance_->collisionWorld->performRayTestAngleEx(Start, End, Result, RX, RY, RZ, ObjectRotation, ObjectPosition, Model))
 	{
 		//Get our adderesses for the last 5
 		amx_GetAddr(amx, params[7], &addr[0]);
@@ -234,7 +235,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngleEx(AMX *amx, cell *pa
 		*addr[7] = amx_ftoc(ObjectPosition.getY());
 		*addr[8] = amx_ftoc(ObjectPosition.getZ());
 
-		collisionWorld->QuatToEuler(ObjectRotation, Result);
+		ColAndreasComponent::instance_->collisionWorld->QuatToEuler(ObjectRotation, Result);
 
 		*addr[9] = amx_ftoc(Result.getX());
 		*addr[10] = amx_ftoc(Result.getY());
@@ -246,7 +247,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngleEx(AMX *amx, cell *pa
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastMultiLine(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastMultiLine(AMX *amx, const cell* params)
 {
 	// Adding a small value prevents a potential crash if all values are the same
 	btVector3 Start = btVector3(btScalar(amx_ctof(params[1]) + 0.00001), btScalar(amx_ctof(params[2]) + 0.00001), btScalar(amx_ctof(params[3]) + 0.00001));
@@ -264,15 +265,15 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastMultiLine(AMX *amx, cell *para
 	for (int i = 0; i < size; i++)
 		ModelIDs[i] = 0;
 
-	if (collisionWorld->performRayTestAll(Start, End, Result, ModelIDs, size))
+	if (ColAndreasComponent::instance_->collisionWorld->performRayTestAll(Start, End, Result, ModelIDs, size))
 	{
 		if (Result.size() <= size)
 		{
-			cell *rawDataX = NULL;
-			cell *rawDataY = NULL;
-			cell *rawDataZ = NULL;
-			cell *rawDataDist = NULL;
-			cell *rawDataModel = NULL;
+			cell* rawDataX = NULL;
+			cell* rawDataY = NULL;
+			cell* rawDataZ = NULL;
+			cell* rawDataDist = NULL;
+			cell* rawDataModel = NULL;
 
 			amx_GetAddr(amx, params[7], &rawDataX);
 			amx_GetAddr(amx, params[8], &rawDataY);
@@ -286,7 +287,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastMultiLine(AMX *amx, cell *para
 				rawDataY[i] = amx_ftoc(Result[i].getY());
 				rawDataZ[i] = amx_ftoc(Result[i].getZ());
 
-				btScalar distance = collisionWorld->getDist3D(Start, btVector3(Result[i].getX(), Result[i].getY(), Result[i].getZ()));
+				btScalar distance = ColAndreasComponent::instance_->collisionWorld->getDist3D(Start, btVector3(Result[i].getX(), Result[i].getY(), Result[i].getZ()));
 				rawDataDist[i] = amx_ftoc(distance);
 				rawDataModel[i] = ModelIDs[i];
 			}
@@ -297,57 +298,57 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastMultiLine(AMX *amx, cell *para
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_LoadFromDff(AMX *amx, cell *params)
+
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_LoadFromDff(AMX *amx, const cell* params)
 {
-	if (!colDataLoaded)
+	if (!ColAndreasComponent::instance_->colDataLoaded)
 	{
-		logprintf("ERROR: CA_LoadFromDff : ColAndreas.cadb not loaded; you need it even if you only want custom models collision");
+		ColAndreasComponent::instance_->core_->printLn("ERROR: CA_LoadFromDff : ColAndreas.cadb not loaded; you need it even if you only want custom models collision");
 		return -1;
 	}
 
 	int32_t modelid = static_cast<int32_t>(params[1]);
-	char* _dffModelName;
-	amx_StrParam(amx, params[2], _dffModelName);
+	std::string _dffModelName = Utility::convertNativeStringToString(amx, params[2]);
 	std::string dffModelName = std::string("models/") + _dffModelName;
 
 	rw::Clump dffData;
-	ifstream file(dffModelName, ios::binary);
+	std::ifstream file(dffModelName, std::ios::binary);
 	if (file.fail()) 
 	{
-		logprintf("ERROR: CA_LoadFromDff: File %s not found in models directory.", _dffModelName);
+		ColAndreasComponent::instance_->core_->printLn("ERROR: CA_LoadFromDff: File %s not found in models directory.", _dffModelName.c_str());
 		return -1;
 	}
 
 	if (dffData.read(file, modelid))
 	{
-		logprintf("ColAndreas: Loaded custom model collision. ID: %d, Model Name: %s", modelid, _dffModelName);
+		ColAndreasComponent::instance_->core_->printLn("ColAndreas: Loaded custom model collision. ID: %d, Model Name: %s", modelid, _dffModelName.c_str());
 		return 1;
 	}
 
-	logprintf("ColAndreas: Unable to load collision from given dff file (Corrupted data or no collision). ID: %d, Model Name: %s", modelid, _dffModelName);
+	ColAndreasComponent::instance_->core_->printLn("ColAndreas: Unable to load collision from given dff file (Corrupted data or no collision). ID: %d, Model Name: %s", modelid, _dffModelName.c_str());
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_CreateObject(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_CreateObject(AMX *amx, const cell* params)
 {
-	if(!colDataLoaded)
+	if(!ColAndreasComponent::instance_->colDataLoaded)
 	{
-		logprintf("ERROR: CA_CreateObject : Collision data not found.");
+		ColAndreasComponent::instance_->core_->printLn("ERROR: CA_CreateObject : Collision data not found.");
 		return -1;
 	}
 	
 	int32_t modelid = static_cast<int32_t>(params[1]);
 	uint16_t addtomanager = static_cast<uint16_t>(params[8]);
 
-	if (collisionWorld->getModelRef(modelid) != 65535)
+	if (ColAndreasComponent::instance_->collisionWorld->getModelRef(modelid) != 65535)
 	{
 		btVector3 position = btVector3(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 		btVector3 rotation = btVector3(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
 
 		btQuaternion quatrotation;
-		collisionWorld->EulerToQuat(rotation, quatrotation);
+		ColAndreasComponent::instance_->collisionWorld->EulerToQuat(rotation, quatrotation);
 
-		return collisionWorld->createColAndreasMapObject(addtomanager, modelid, quatrotation, position);
+		return ColAndreasComponent::instance_->collisionWorld->createColAndreasMapObject(addtomanager, modelid, quatrotation, position);
 	}
 
 	// Model had no collision
@@ -355,23 +356,23 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_CreateObject(AMX *amx, cell *params)
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_DestroyObject(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_DestroyObject(AMX *amx, const cell* params)
 {
 	uint16_t index = static_cast<uint16_t>(params[1]);
 
 	if (index >= MAX_MAP_OBJECTS) return -1;
-	return collisionWorld->objectManager->removeObjectManager(index);
+	return ColAndreasComponent::instance_->collisionWorld->objectManager->removeObjectManager(index);
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_IsValidObject(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_IsValidObject(AMX *amx, const cell* params)
 {
 	uint16_t index = static_cast<uint16_t>(params[1]);
 
 	if (index >= MAX_MAP_OBJECTS) return -1;
-	return collisionWorld->objectManager->validObjectManager(index);
+	return ColAndreasComponent::instance_->collisionWorld->objectManager->validObjectManager(index);
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_EulerToQuat(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_EulerToQuat(AMX *amx, const cell* params)
 {
 	cell* addr[4];
 
@@ -379,7 +380,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_EulerToQuat(AMX *amx, cell *params)
 
 	btVector3 rotation = btVector3(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 
-	collisionWorld->EulerToQuat(rotation, Result);
+	ColAndreasComponent::instance_->collisionWorld->EulerToQuat(rotation, Result);
 
 	amx_GetAddr(amx, params[4], &addr[0]);
 	amx_GetAddr(amx, params[5], &addr[1]);
@@ -395,7 +396,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_EulerToQuat(AMX *amx, cell *params)
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_QuatToEuler(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_QuatToEuler(AMX *amx, const cell* params)
 {
 	cell* addr[3];
 
@@ -403,7 +404,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_QuatToEuler(AMX *amx, cell *params)
 
 	btQuaternion rotation = btQuaternion(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 
-	collisionWorld->QuatToEuler(rotation, Result);
+	ColAndreasComponent::instance_->collisionWorld->QuatToEuler(rotation, Result);
 
 	amx_GetAddr(amx, params[5], &addr[0]);
 	amx_GetAddr(amx, params[6], &addr[1]);
@@ -416,9 +417,9 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_QuatToEuler(AMX *amx, cell *params)
 	return 1;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RemoveBuilding(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RemoveBuilding(AMX *amx, const cell* params)
 {
-	if (!colInit)
+	if (!ColAndreasComponent::instance_->colInit)
 	{
 		removeBuildingData tmp;
 		tmp.r_Model = static_cast<int16_t>(params[1]);
@@ -427,19 +428,19 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RemoveBuilding(AMX *amx, cell *params
 		tmp.r_Y = amx_ctof(params[3]);
 		tmp.r_Z = amx_ctof(params[4]);
 		tmp.r_Radius = amx_ctof(params[5]);
-		collisionWorld->removedManager->addBuilding(tmp);
+		ColAndreasComponent::instance_->collisionWorld->removedManager->addBuilding(tmp);
 		return 1;
 	}
 	else
 	{
-		logprintf("ERROR: CA_RemoveBuilding : Map has already been initialized. Use this before CA_Init.");
+		ColAndreasComponent::instance_->core_->printLn("ERROR: CA_RemoveBuilding : Map has already been initialized. Use this before CA_Init.");
 	}
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RestoreBuilding(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RestoreBuilding(AMX *amx, const cell* params)
 {
-	if (colInit)
+	if (ColAndreasComponent::instance_->colInit)
 	{
 		removeBuildingData tmp;
 		tmp.r_Model = static_cast<int16_t>(params[1]);
@@ -448,34 +449,34 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RestoreBuilding(AMX *amx, cell *param
 		tmp.r_Y = amx_ctof(params[3]);
 		tmp.r_Z = amx_ctof(params[4]);
 		tmp.r_Radius = amx_ctof(params[5]);
-		collisionWorld->removedManager->restoreBuilding(tmp);
+		ColAndreasComponent::instance_->collisionWorld->removedManager->restoreBuilding(tmp);
 		return 1;
 	}
 	else
 	{
-		logprintf("ERROR: CA_RestoreBuilding : Map is not initialized yet. Use this after CA_Init.");
+		ColAndreasComponent::instance_->core_->printLn("ERROR: CA_RestoreBuilding : Map is not initialized yet. Use this after CA_Init.");
 	}
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_SetObjectPos(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_SetObjectPos(AMX *amx, const cell* params)
 {
 	uint16_t index = static_cast<uint16_t>(params[1]);
 	btVector3 position = btVector3(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
-	return collisionWorld->objectManager->setObjectPosition(index, position);
+	return ColAndreasComponent::instance_->collisionWorld->objectManager->setObjectPosition(index, position);
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_SetObjectRot(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_SetObjectRot(AMX *amx, const cell* params)
 {
 	uint16_t index = static_cast<uint16_t>(params[1]);
 	btQuaternion result;
 	btVector3 rotation = btVector3(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
-	collisionWorld->EulerToQuat(rotation, result);
-	return collisionWorld->objectManager->setObjectRotation(index, result);
+	ColAndreasComponent::instance_->collisionWorld->EulerToQuat(rotation, result);
+	return ColAndreasComponent::instance_->collisionWorld->objectManager->setObjectRotation(index, result);
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetModelBoundingSphere(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetModelBoundingSphere(AMX *amx, const cell* params)
 {
 	int32_t modelid = static_cast<int32_t>(params[1]);
 	
@@ -484,7 +485,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetModelBoundingSphere(AMX *amx, cell
 		btScalar Radius;
 		btVector3 Center;
 
-		if (collisionWorld->objectManager->getBoundingSphere(modelid, Center, Radius))
+		if (ColAndreasComponent::instance_->collisionWorld->objectManager->getBoundingSphere(modelid, Center, Radius))
 		{
 			cell* addr[4];
 			amx_GetAddr(amx, params[2], &addr[0]);
@@ -504,7 +505,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetModelBoundingSphere(AMX *amx, cell
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetModelBoundingBox(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetModelBoundingBox(AMX *amx, const cell* params)
 {
 	int32_t modelid = static_cast<int32_t>(params[1]);
 	
@@ -513,7 +514,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetModelBoundingBox(AMX *amx, cell *p
 		btVector3 Min;
 		btVector3 Max;
 
-		if (collisionWorld->objectManager->getBoundingBox(modelid, Min, Max))
+		if (ColAndreasComponent::instance_->collisionWorld->objectManager->getBoundingBox(modelid, Min, Max))
 		{
 			cell* addr[6];
 			amx_GetAddr(amx, params[2], &addr[0]);
@@ -536,22 +537,22 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetModelBoundingBox(AMX *amx, cell *p
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_SetObjectExtraID(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_SetObjectExtraID(AMX *amx, const cell* params)
 {
 	uint16_t index = static_cast<uint16_t>(params[1]);
-	collisionWorld->setMyExtraID(index, params[2], params[3]);
+	ColAndreasComponent::instance_->collisionWorld->setMyExtraID(index, params[2], params[3]);
 	return 1;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetObjectExtraID(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetObjectExtraID(AMX *amx, const cell* params)
 {
 	uint16_t index = static_cast<uint16_t>(params[1]);
-	return collisionWorld->getMyExtraID(index, params[2]);
+	return ColAndreasComponent::instance_->collisionWorld->getMyExtraID(index, params[2]);
 }
 
 
 // CA_RayCastReflectionVector(Float:startx, Float:starty, Float:startz, Float:endx, Float:endy, Float:endz, &Float:vector);
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastReflectionVector(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastReflectionVector(AMX *amx, const cell* params)
 {
 	cell* addr[6];
 
@@ -562,7 +563,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastReflectionVector(AMX *amx, cel
 	btVector3 Position;
 	int32_t model;
 
-	if (collisionWorld->performRayTestReflection(Start, End, Position, Result, model))
+	if (ColAndreasComponent::instance_->collisionWorld->performRayTestReflection(Start, End, Position, Result, model))
 	{
 		amx_GetAddr(amx, params[7], &addr[0]);
 		amx_GetAddr(amx, params[8], &addr[1]);
@@ -589,7 +590,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastReflectionVector(AMX *amx, cel
 
 
 // CA_RayCastLineNormal(Float:startx, Float:starty, Float:startz, Float:endx, Float:endy, Float:endz, &Float:vector);
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineNormal(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineNormal(AMX *amx, const cell* params)
 {
 	cell* addr[6];
 
@@ -600,7 +601,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineNormal(AMX *amx, cell *par
 	btVector3 Position;
 	int32_t model;
 
-	if (collisionWorld->performRayTestNormal(Start, End, Position, Result, model))
+	if (ColAndreasComponent::instance_->collisionWorld->performRayTestNormal(Start, End, Position, Result, model))
 	{
 		amx_GetAddr(amx, params[7], &addr[0]);
 		amx_GetAddr(amx, params[8], &addr[1]);
@@ -624,7 +625,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineNormal(AMX *amx, cell *par
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_ContactTest(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_ContactTest(AMX *amx, const cell* params)
 {
 	int32_t modelid = static_cast<int32_t>(params[1]);
 	
@@ -632,7 +633,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_ContactTest(AMX *amx, cell *params)
 	btVector3 rotation = btVector3(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
 	
 	btQuaternion quatrotation;
-	collisionWorld->EulerToQuat(rotation, quatrotation);
+	ColAndreasComponent::instance_->collisionWorld->EulerToQuat(rotation, quatrotation);
 	
-	return collisionWorld->performContactTest(modelid, position, quatrotation);
+	return ColAndreasComponent::instance_->collisionWorld->performContactTest(modelid, position, quatrotation);
 }

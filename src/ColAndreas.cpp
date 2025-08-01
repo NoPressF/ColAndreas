@@ -1,76 +1,16 @@
 //*********************************************************************************************************//
 // ColAndreas by [uL]Pottus & [uL]Chris42O & [uL]Slice ****************************************************//
 //*********************************************************************************************************//
-
-#include <string>
-#include <vector>
-
-using namespace std;
-
-#include <btBulletDynamicsCommon.h>
+#include <Server/Components/Pawn/Impl/pawn_natives.hpp>
+#include <Server/Components/Pawn/Impl/pawn_impl.hpp>
 #include "ColAndreas.h"
-#include "DynamicWorld.h"
 #include "Natives.h"
 
-bool colInit = false;
-bool colDataLoaded = false;
-cell nullAddress = NULL;
+void* pAMXFunctions = nullptr;
+extern void* pAMXFunctions;
 
-ColAndreasWorld* collisionWorld;
-
-logprintf_t				logprintf;
-
-extern void *pAMXFunctions;
-
-// Plugin Load
-PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
+AMX_NATIVE_INFO natives[] =
 {
-	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
-	logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
-
-	logprintf("*********************");
-	logprintf("** Created By:     **");
-	logprintf("** [uL]Chris42O    **");
-	logprintf("** [uL]Slice       **");
-	logprintf("** [uL]Pottus      **");
-	logprintf("*********************");
-
-	collisionWorld = new ColAndreasWorld();
-
-	if (collisionWorld->loadCollisionData())
-	{
-		logprintf("Loaded collision data.");
-		colDataLoaded = true;
-	}
-	else
-	{
-		logprintf("No collision data found.");
-	}
-
-	logprintf("*********************");
-	logprintf("  ColAndreas Loaded");
-	logprintf("   " CA_VERSION);
-	logprintf("*********************");
-
-	return true;
-}
-
-
-// Plugin unload
-PLUGIN_EXPORT void PLUGIN_CALL Unload()
-{
-//	delete collisionWorld;
-
-	logprintf("*********************");
-	logprintf("*ColAndreas Unloaded*");
-	logprintf("*********************");
-
-}
-
-// Function list
-AMX_NATIVE_INFO PluginNatives[] =
-{
-	// Standard Natives
 	{ "CA_Init", ColAndreasNatives::CA_Init },
 	{ "CA_RayCastLine", ColAndreasNatives::CA_RayCastLine },
 	{ "CA_RayCastLineExtraID", ColAndreasNatives::CA_RayCastLineExtraID },
@@ -101,20 +41,104 @@ AMX_NATIVE_INFO PluginNatives[] =
 	{ 0, 0 }
 };
 
-// Plugin Export
-PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
+StringView ColAndreasComponent::componentName() const
 {
-	return SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES;
+	return "ColAndreas";
 }
 
-
-PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *amx)
+SemanticVersion ColAndreasComponent::componentVersion() const
 {
-	return amx_Register(amx, PluginNatives, -1);
+	return SemanticVersion(1, 5, 0, 0);
 }
 
-
-PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *amx)
+void ColAndreasComponent::onLoad(ICore* c)
 {
-	return AMX_ERR_NONE;
+	instance_ = this;
+	core_ = c;
+	setAmxLookups(core_);
+
+	core_->printLn("*********************");
+	core_->printLn("** Created By:     **");
+	core_->printLn("** [uL]Chris42O    **");
+	core_->printLn("** [uL]Slice       **");
+	core_->printLn("** [uL]Pottus      **");
+	core_->printLn("*********************");
+
+	collisionWorld = new ColAndreasWorld();
+
+	if (collisionWorld->loadCollisionData())
+	{
+		core_->printLn("Loaded collision data.");
+		colDataLoaded = true;
+	}
+	else
+	{
+		core_->printLn("No collision data found.");
+	}
+
+	core_->printLn("*********************");
+	core_->printLn("  ColAndreas Loaded");
+	core_->printLn("   " CA_VERSION);
+	core_->printLn("*********************");
+}
+
+void ColAndreasComponent::onInit(IComponentList* components)
+{
+	ompgdk::GDKManager::Get()->Init(core_, components);
+	pawn_ = components->queryComponent<IPawnComponent>();
+
+	if (pawn_)
+	{
+		setAmxLookups(components);
+		pAMXFunctions = (void*)&pawn_->getAmxFunctions();
+		pawn_->getEventDispatcher().addEventHandler(this);
+	}
+}
+
+void ColAndreasComponent::onReady()
+{
+
+}
+
+void ColAndreasComponent::onFree(IComponent* component)
+{
+	if (component == pawn_)
+	{
+		pawn_ = nullptr;
+		pAMXFunctions = nullptr;
+		setAmxLookups();
+
+		core_->printLn("*********************");
+		core_->printLn("*ColAndreas Unloaded*");
+		core_->printLn("*********************");
+	}
+}
+
+void ColAndreasComponent::free()
+{
+	delete this;
+}
+
+void ColAndreasComponent::reset()
+{
+
+}
+
+void ColAndreasComponent::onAmxLoad(IPawnScript& script)
+{
+	pawn_natives::AmxLoad(script.GetAMX());
+	amx_Register(script.GetAMX(), natives, -1);
+}
+
+void ColAndreasComponent::onAmxUnload(IPawnScript& script)
+{
+	
+}
+
+ColAndreasComponent::~ColAndreasComponent()
+{
+	if (pawn_)
+	{
+		pawn_->getEventDispatcher().removeEventHandler(this);
+	}
 }

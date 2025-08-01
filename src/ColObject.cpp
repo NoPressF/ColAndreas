@@ -358,7 +358,7 @@ void RemovedBuildingManager::restoreBuilding(removeBuildingData targetData)
 					uint16_t index = ModelRef[RemovedGameObjects[i]->Modelid];
 					if (index == 65535) continue;
 
-					collisionWorld->createColAndreasMapObject(0, RemovedGameObjects[i]->Modelid,
+					ColAndreasComponent::instance_->collisionWorld->createColAndreasMapObject(0, RemovedGameObjects[i]->Modelid,
 						btQuaternion(RemovedGameObjects[i]->Rotation.x, RemovedGameObjects[i]->Rotation.y, RemovedGameObjects[i]->Rotation.z, RemovedGameObjects[i]->Rotation.w),
 						btVector3(RemovedGameObjects[i]->Position.x, RemovedGameObjects[i]->Position.y, RemovedGameObjects[i]->Position.z));
 
@@ -380,7 +380,7 @@ void InitCollisionMap(btDynamicsWorld* collisionWorld, RemovedBuildingManager* r
 	{
 		if (ModelPlacements[i].Modelid > 19999)
 		{
-			logprintf("ERROR::InitCollisionMap::Invalid ModelID::%i", ModelPlacements[i].Modelid);
+			ColAndreasComponent::instance_->core_->printLn("ERROR::InitCollisionMap::Invalid ModelID::%i", ModelPlacements[i].Modelid);
 			continue;
 		}
 

@@ -9,8 +9,6 @@
 #include <vector>
 #include <map>
 
-using namespace std;
-
 /*
 Binary file format
 

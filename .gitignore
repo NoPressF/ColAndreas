@@ -1,6 +1,8 @@
 # Build files
 build/
 output/
+bullet3-2.87/
+.vs/
 
 # Windows image file caches
 Thumbs.db

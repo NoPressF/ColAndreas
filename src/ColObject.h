@@ -6,6 +6,8 @@
 #include "ColAndreas.h"
 #include "LodArray.h"
 
+class ColAndreasWorld;
+
 #define MAX_MAP_OBJECTS 50000
 
 struct removeBuildingData

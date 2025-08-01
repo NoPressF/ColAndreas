@@ -1,7 +1,6 @@
 #ifndef _INCL_DYNWORLD
 #define _INCL_DYNWORLD
 
-#include <btBulletDynamicsCommon.h>
 #include "ColObject.h"
 #include "ColAndreas.h"
 
@@ -21,6 +20,10 @@ struct ContactCollisionSensor : public btCollisionWorld::ContactResultCallback /
 		return 0;
 	}
 };
+
+class RemovedBuildingManager;
+class ObjectManager;
+class MapWaterMesh;
 
 class ColAndreasWorld
 {
@@ -64,7 +67,5 @@ private:
 	btCollisionDispatcher* dispatcher;
 	btSequentialImpulseConstraintSolver* solver;
 };
-
-extern ColAndreasWorld* collisionWorld;
 
 #endif

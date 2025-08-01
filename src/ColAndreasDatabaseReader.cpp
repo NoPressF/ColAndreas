@@ -18,9 +18,9 @@ bool ReadColandreasDatabaseFile(std::string FileLocation)
 {
 	bool returnValue = false;
 
-	ifstream ColAndreasBinaryfile;
+	std::ifstream ColAndreasBinaryfile;
 
-	ColAndreasBinaryfile.open(FileLocation, ios::in | ios::binary);
+	ColAndreasBinaryfile.open(FileLocation, std::ios::in | std::ios::binary);
 
 	if (ColAndreasBinaryfile.is_open()) {
 		ColAndreasBinaryfile.seekg(0, ColAndreasBinaryfile.end);
@@ -114,7 +114,7 @@ bool ReadColandreasDatabaseFile(std::string FileLocation)
 			}
 			else
 			{
-				logprintf("ERROR: Incompatible database file, expecting version 0x%04X, but found 0x%04X.", CA_DATABASE_VERSION, fileVersion);
+				ColAndreasComponent::instance_->core_->printLn("ERROR: Incompatible database file, expecting version 0x%04X, but found 0x%04X.", CA_DATABASE_VERSION, fileVersion);
 				returnValue = false;
 			}
 		}

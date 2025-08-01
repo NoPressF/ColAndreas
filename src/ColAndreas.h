@@ -1,36 +1,37 @@
-// Bet this is it here
+#pragma once
 
-#ifndef _INCL_COLANDREAS
-#define _INCL_COLANDREAS
+#include <sdk.hpp>
+#include <ompgdk.hpp>
+#include <Server/Components/Pawn/pawn.hpp>
+#include "DynamicWorld.h"
 
-#pragma warning (disable:4005 700 996)
-#if (defined(WIN32) || defined(_WIN32) || defined(_WIN64))
-#include <windows.h>
-#else
-#include "pthread.h"
-#endif
-#include "sstream"
-#if defined(LINUX) || defined(FREEBSD) || defined(__FreeBSD__) || defined(__OpenBSD__)
-#include "stdarg.h"
-#endif
+using namespace Impl;
 
-#ifndef WIN32
-typedef unsigned long DWORD;
-#define MAX_PATH 250
-#endif
+class ColAndreasWorld;
 
-// AMX
-typedef void(*logprintf_t)(char* format, ...);
-#include "SDK/amx/amx.h"
-#include "SDK/plugincommon.h"
+class ColAndreasComponent final : public IComponent, public PawnEventHandler
+{
+public:
+    PROVIDE_UID(0xA88D09ECC0F8B9A5);
 
-// Standard includes
-#include <vector>
+    ICore* core_;
+    IPawnComponent* pawn_;
+    inline static ColAndreasComponent* instance_ = nullptr;
 
-extern bool colInit;
-extern bool colDataLoaded;
-extern cell nullAddress;
-extern logprintf_t				logprintf;
+    StringView componentName() const override;
+    SemanticVersion componentVersion() const override;
+    void onLoad(ICore* c) override;
+    void onInit(IComponentList* components) override;
+    void onReady() override;
+    void onAmxLoad(IPawnScript& script) override;
+    void onAmxUnload(IPawnScript& script) override;
+    void onFree(IComponent* component) override;
+    void reset() override;
+    void free() override;
 
+    bool colInit = false;
+    bool colDataLoaded = false;
+    ColAndreasWorld* collisionWorld;
 
-#endif
+    ~ColAndreasComponent();
+};

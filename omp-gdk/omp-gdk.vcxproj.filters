@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\Singleton.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\components\Actors.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\components\Checkpoints.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\components\Objects.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\components\Pickups.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\components\PlayerObjects.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\components\PlayerPickups.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\components\PlayerTextLabels.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\components\Players.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\components\Vehicles.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\components\common.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\main.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\ompgdk.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\EOS\Desktop\ColAndreas-master\omp-gdk\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{AECBD644-7273-3E65-AAF0-E4AE7FB30D7B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{CDB934BF-0D19-3F3E-826B-FBB820DF6029}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
