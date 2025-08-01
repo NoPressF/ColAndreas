@@ -81,7 +81,6 @@ void ColAndreasComponent::onLoad(ICore* c)
 
 void ColAndreasComponent::onInit(IComponentList* components)
 {
-	ompgdk::GDKManager::Get()->Init(core_, components);
 	pawn_ = components->queryComponent<IPawnComponent>();
 
 	if (pawn_)

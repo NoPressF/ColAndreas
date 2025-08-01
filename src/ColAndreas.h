@@ -1,7 +1,6 @@
 #pragma once
 
 #include <sdk.hpp>
-#include <ompgdk.hpp>
 #include <Server/Components/Pawn/pawn.hpp>
 #include "DynamicWorld.h"
 

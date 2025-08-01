@@ -12,13 +12,11 @@ set(CA_DATABASE_VERSION 2)
 add_definitions(-DCA_VERSION="${CA_VERSION}" -DCA_DATABASE_VERSION=${CA_DATABASE_VERSION})
 
 add_subdirectory(omp-sdk)
-add_subdirectory(omp-gdk)
 
 add_definitions(-DBT_NO_SIMD_OPERATOR_OVERLOADS)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
-	${OMP_GDK_PATH}
     ${CMAKE_CURRENT_SOURCE_DIR}/bullet3-2.87/src
     ${CMAKE_CURRENT_SOURCE_DIR}/pawn/source
     ${CMAKE_CURRENT_SOURCE_DIR}/pawn/source/linux
@@ -83,7 +81,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
     OMP-SDK
-	omp-gdk
     "${CMAKE_CURRENT_SOURCE_DIR}/bullet3-2.87/build3/lib/Release/BulletCollision.lib"
     "${CMAKE_CURRENT_SOURCE_DIR}/bullet3-2.87/build3/lib/Release/BulletDynamics.lib"
     "${CMAKE_CURRENT_SOURCE_DIR}/bullet3-2.87/build3/lib/Release/LinearMath.lib"
