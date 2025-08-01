@@ -3,34 +3,35 @@
 
 #include "ColAndreas.h"
 
-namespace ColAndreasNatives
+class ColAndreasNatives
 {
-	cell AMX_NATIVE_CALL CA_Init(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_RayCastLine(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_RayCastLineExtraID(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_RayCastLineID(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_RayCastMultiLine(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_RayCastLineAngle(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_RayCastReflectionVector(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_RayCastLineNormal(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_LoadFromDff(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_CreateObject(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_DestroyObject(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_IsValidObject(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_EulerToQuat(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_QuatToEuler(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_RemoveBuilding(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_RestoreBuilding(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_SetObjectPos(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_SetObjectRot(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_GetModelBoundingSphere(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_GetModelBoundingBox(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_SetObjectExtraID(AMX* amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_GetObjectExtraID(AMX* amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_ContactTest(AMX *amx, const cell* params);
+public:
+	static cell AMX_NATIVE_CALL CA_Init(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_RayCastLine(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_RayCastLineExtraID(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_RayCastLineID(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_RayCastMultiLine(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_RayCastLineAngle(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_RayCastReflectionVector(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_RayCastLineNormal(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_LoadFromDff(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_CreateObject(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_DestroyObject(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_IsValidObject(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_EulerToQuat(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_QuatToEuler(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_RemoveBuilding(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_RestoreBuilding(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_SetObjectPos(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_SetObjectRot(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_GetModelBoundingSphere(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_GetModelBoundingBox(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_SetObjectExtraID(AMX* amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_GetObjectExtraID(AMX* amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_ContactTest(AMX *amx, cell *params);
 
 	// Extended natives
-	cell AMX_NATIVE_CALL CA_RayCastLineEx(AMX *amx, const cell* params);
-	cell AMX_NATIVE_CALL CA_RayCastLineAngleEx(AMX *amx, const cell* params);
+	static cell AMX_NATIVE_CALL CA_RayCastLineEx(AMX *amx, cell *params);
+	static cell AMX_NATIVE_CALL CA_RayCastLineAngleEx(AMX *amx, cell *params);
 };
 #endif

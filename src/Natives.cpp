@@ -1,7 +1,6 @@
 #include "Natives.h"
 #include "DynamicWorld.h"
-#include "renderware.h"
-#include "utility.h"
+#include <renderware.h>
 
 // Maximum number of raycasts
 #define MAX_MULTICAST_SIZE 99
@@ -10,7 +9,7 @@
 // native functions ***************************************************************************************//
 //*********************************************************************************************************//
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_Init(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_Init(AMX *amx, cell* params)
 {
 	if (ColAndreasComponent::instance_->colDataLoaded == true)
 	{
@@ -32,7 +31,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_Init(AMX *amx, const cell* params)
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLine(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLine(AMX *amx, cell* params)
 {
 	cell* addr[3];
 
@@ -59,7 +58,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLine(AMX *amx, const cell* par
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineID(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineID(AMX *amx, cell* params)
 {
 	cell* addr[3];
 
@@ -86,7 +85,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineID(AMX *amx, const cell* p
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineExtraID(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineExtraID(AMX *amx, cell* params)
 {
 	cell* addr[3];
 
@@ -113,7 +112,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineExtraID(AMX *amx, const ce
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineEx(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineEx(AMX *amx, cell* params)
 {
 	cell* addr[10];
 
@@ -154,7 +153,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineEx(AMX *amx, const cell* p
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngle(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngle(AMX *amx, cell* params)
 {
 	cell* addr[6];
 
@@ -190,7 +189,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngle(AMX *amx, const cell
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngleEx(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngleEx(AMX *amx, cell* params)
 {
 	cell* addr[12];
 
@@ -247,7 +246,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineAngleEx(AMX *amx, const ce
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastMultiLine(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastMultiLine(AMX *amx, cell* params)
 {
 	// Adding a small value prevents a potential crash if all values are the same
 	btVector3 Start = btVector3(btScalar(amx_ctof(params[1]) + 0.00001), btScalar(amx_ctof(params[2]) + 0.00001), btScalar(amx_ctof(params[3]) + 0.00001));
@@ -299,7 +298,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastMultiLine(AMX *amx, const cell
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_LoadFromDff(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_LoadFromDff(AMX *amx, cell* params)
 {
 	if (!ColAndreasComponent::instance_->colDataLoaded)
 	{
@@ -308,28 +307,29 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_LoadFromDff(AMX *amx, const cell* par
 	}
 
 	int32_t modelid = static_cast<int32_t>(params[1]);
-	std::string _dffModelName = Utility::convertNativeStringToString(amx, params[2]);
+	char* _dffModelName;
+	amx_StrParam(amx, params[2], _dffModelName);
 	std::string dffModelName = std::string("models/") + _dffModelName;
 
 	rw::Clump dffData;
 	std::ifstream file(dffModelName, std::ios::binary);
 	if (file.fail()) 
 	{
-		ColAndreasComponent::instance_->core_->printLn("ERROR: CA_LoadFromDff: File %s not found in models directory.", _dffModelName.c_str());
+		ColAndreasComponent::instance_->core_->printLn("ERROR: CA_LoadFromDff: File %s not found in models directory.", _dffModelName);
 		return -1;
 	}
 
 	if (dffData.read(file, modelid))
 	{
-		ColAndreasComponent::instance_->core_->printLn("ColAndreas: Loaded custom model collision. ID: %d, Model Name: %s", modelid, _dffModelName.c_str());
+		ColAndreasComponent::instance_->core_->printLn("ColAndreas: Loaded custom model collision. ID: %d, Model Name: %s", modelid, _dffModelName);
 		return 1;
 	}
 
-	ColAndreasComponent::instance_->core_->printLn("ColAndreas: Unable to load collision from given dff file (Corrupted data or no collision). ID: %d, Model Name: %s", modelid, _dffModelName.c_str());
+	ColAndreasComponent::instance_->core_->printLn("ColAndreas: Unable to load collision from given dff file (Corrupted data or no collision). ID: %d, Model Name: %s", modelid, _dffModelName);
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_CreateObject(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_CreateObject(AMX *amx, cell* params)
 {
 	if(!ColAndreasComponent::instance_->colDataLoaded)
 	{
@@ -356,7 +356,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_CreateObject(AMX *amx, const cell* pa
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_DestroyObject(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_DestroyObject(AMX *amx, cell* params)
 {
 	uint16_t index = static_cast<uint16_t>(params[1]);
 
@@ -364,7 +364,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_DestroyObject(AMX *amx, const cell* p
 	return ColAndreasComponent::instance_->collisionWorld->objectManager->removeObjectManager(index);
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_IsValidObject(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_IsValidObject(AMX *amx, cell* params)
 {
 	uint16_t index = static_cast<uint16_t>(params[1]);
 
@@ -372,7 +372,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_IsValidObject(AMX *amx, const cell* p
 	return ColAndreasComponent::instance_->collisionWorld->objectManager->validObjectManager(index);
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_EulerToQuat(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_EulerToQuat(AMX *amx, cell* params)
 {
 	cell* addr[4];
 
@@ -396,7 +396,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_EulerToQuat(AMX *amx, const cell* par
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_QuatToEuler(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_QuatToEuler(AMX *amx, cell* params)
 {
 	cell* addr[3];
 
@@ -417,7 +417,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_QuatToEuler(AMX *amx, const cell* par
 	return 1;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RemoveBuilding(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RemoveBuilding(AMX *amx, cell* params)
 {
 	if (!ColAndreasComponent::instance_->colInit)
 	{
@@ -438,7 +438,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RemoveBuilding(AMX *amx, const cell* 
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RestoreBuilding(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RestoreBuilding(AMX *amx, cell* params)
 {
 	if (ColAndreasComponent::instance_->colInit)
 	{
@@ -459,14 +459,14 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RestoreBuilding(AMX *amx, const cell*
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_SetObjectPos(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_SetObjectPos(AMX *amx, cell* params)
 {
 	uint16_t index = static_cast<uint16_t>(params[1]);
 	btVector3 position = btVector3(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 	return ColAndreasComponent::instance_->collisionWorld->objectManager->setObjectPosition(index, position);
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_SetObjectRot(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_SetObjectRot(AMX *amx, cell* params)
 {
 	uint16_t index = static_cast<uint16_t>(params[1]);
 	btQuaternion result;
@@ -476,7 +476,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_SetObjectRot(AMX *amx, const cell* pa
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetModelBoundingSphere(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetModelBoundingSphere(AMX *amx, cell* params)
 {
 	int32_t modelid = static_cast<int32_t>(params[1]);
 	
@@ -505,7 +505,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetModelBoundingSphere(AMX *amx, cons
 }
 
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetModelBoundingBox(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetModelBoundingBox(AMX *amx, cell* params)
 {
 	int32_t modelid = static_cast<int32_t>(params[1]);
 	
@@ -537,14 +537,14 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetModelBoundingBox(AMX *amx, const c
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_SetObjectExtraID(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_SetObjectExtraID(AMX *amx, cell* params)
 {
 	uint16_t index = static_cast<uint16_t>(params[1]);
 	ColAndreasComponent::instance_->collisionWorld->setMyExtraID(index, params[2], params[3]);
 	return 1;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetObjectExtraID(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetObjectExtraID(AMX *amx, cell* params)
 {
 	uint16_t index = static_cast<uint16_t>(params[1]);
 	return ColAndreasComponent::instance_->collisionWorld->getMyExtraID(index, params[2]);
@@ -552,7 +552,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_GetObjectExtraID(AMX *amx, const cell
 
 
 // CA_RayCastReflectionVector(Float:startx, Float:starty, Float:startz, Float:endx, Float:endy, Float:endz, &Float:vector);
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastReflectionVector(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastReflectionVector(AMX *amx, cell* params)
 {
 	cell* addr[6];
 
@@ -590,7 +590,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastReflectionVector(AMX *amx, con
 
 
 // CA_RayCastLineNormal(Float:startx, Float:starty, Float:startz, Float:endx, Float:endy, Float:endz, &Float:vector);
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineNormal(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineNormal(AMX *amx, cell* params)
 {
 	cell* addr[6];
 
@@ -625,7 +625,7 @@ cell AMX_NATIVE_CALL ColAndreasNatives::CA_RayCastLineNormal(AMX *amx, const cel
 	return 0;
 }
 
-cell AMX_NATIVE_CALL ColAndreasNatives::CA_ContactTest(AMX *amx, const cell* params)
+cell AMX_NATIVE_CALL ColAndreasNatives::CA_ContactTest(AMX *amx, cell* params)
 {
 	int32_t modelid = static_cast<int32_t>(params[1]);
 	

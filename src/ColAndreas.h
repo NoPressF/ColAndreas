@@ -1,10 +1,10 @@
 #pragma once
 
 #include <sdk.hpp>
+#include "SDK/amx/amx.h"
+#include "SDK/plugincommon.h"
 #include <Server/Components/Pawn/pawn.hpp>
 #include "DynamicWorld.h"
-
-using namespace Impl;
 
 class ColAndreasWorld;
 

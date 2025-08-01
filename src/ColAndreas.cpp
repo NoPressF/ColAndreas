@@ -1,10 +1,10 @@
 //*********************************************************************************************************//
 // ColAndreas by [uL]Pottus & [uL]Chris42O & [uL]Slice ****************************************************//
 //*********************************************************************************************************//
-#include <Server/Components/Pawn/Impl/pawn_natives.hpp>
-#include <Server/Components/Pawn/Impl/pawn_impl.hpp>
 #include "ColAndreas.h"
 #include "Natives.h"
+
+extern void* pAMXFunctions;
 
 AMX_NATIVE_INFO natives[] =
 {
@@ -52,7 +52,6 @@ void ColAndreasComponent::onLoad(ICore* c)
 {
 	instance_ = this;
 	core_ = c;
-	setAmxLookups(core_);
 
 	core_->printLn("*********************");
 	core_->printLn("** Created By:     **");
@@ -85,8 +84,7 @@ void ColAndreasComponent::onInit(IComponentList* components)
 
 	if (pawn_)
 	{
-		setAmxLookups(components);
-		setAmxFunctions(pawn_->getAmxFunctions());
+		pAMXFunctions = (void*)&pawn_->getAmxFunctions();
 		pawn_->getEventDispatcher().addEventHandler(this);
 	}
 }
@@ -101,8 +99,7 @@ void ColAndreasComponent::onFree(IComponent* component)
 	if (component == pawn_)
 	{
 		pawn_ = nullptr;
-		setAmxFunctions();
-		setAmxLookups();
+		pAMXFunctions = nullptr;
 
 		core_->printLn("*********************");
 		core_->printLn("*ColAndreas Unloaded*");
@@ -122,7 +119,6 @@ void ColAndreasComponent::reset()
 
 void ColAndreasComponent::onAmxLoad(IPawnScript& script)
 {
-	pawn_natives::AmxLoad(script.GetAMX());
 	amx_Register(script.GetAMX(), natives, -1);
 }
 
